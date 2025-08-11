@@ -4,13 +4,7 @@ import Crypto.Cipher.DES3 as des3_module
 from smartcard.System import readers
 from smartcard.util import toBytes
 from smartcard.util import toHexString
-import sys
-import os
 from smartcard.Exceptions import NoCardException, CardConnectionException
-from dotenv import load_dotenv
-
-# Load environment variables from .env file
-load_dotenv()
 import logging
 
 logging.basicConfig(
