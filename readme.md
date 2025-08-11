@@ -30,5 +30,5 @@ Create a `.env` file in the project root and update the values as needed.
 ## 5. Run the Project
 
 ```bash
-python test.py
+python app.py
 ```
