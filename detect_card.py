@@ -1,4 +1,4 @@
-from smartcard.CardMonitoring import CardMonitor, CardObserver
+from smartcard.CardMonitoring import CardObserver
 from smartcard.util import toHexString
 from desfire_read import RCDESFire
 from read_card_data import read_card_data
@@ -40,20 +40,4 @@ class CardEventObserver(CardObserver):
         for card in removed_cards:
             logger.info("Card removed")
 
-# Create a Card Reader
-card_reader = RCDESFire()
 
-# Set up the monitor and observer
-card_monitor = CardMonitor()
-card_observer = CardEventObserver(card_reader)
-
-card_monitor.addObserver(card_observer)
-
-logger.info("Monitoring card events. Press Ctrl+C to exit.")
-
-try:
-    while True:
-        pass  # Keep the program running
-except KeyboardInterrupt:
-    logger.info("Exiting...")
-    card_monitor.deleteObserver(card_observer)
