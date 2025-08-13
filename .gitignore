@@ -1,1 +1,3 @@
 .env
+mifire/
+__pycache__/

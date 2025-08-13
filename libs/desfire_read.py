@@ -1,3 +1,4 @@
+import os
 from Crypto.Cipher import DES, DES3
 from Crypto.Random import get_random_bytes
 import Crypto.Cipher.DES3 as des3_module
@@ -75,8 +76,10 @@ class RCDESFire:
     def get_error_message(status_byte):
         return RCDESFire._ERROR_MAP.get(status_byte, f"Unknown status: {status_byte:02X}")
 
-    def __init__(self, reader_index=0):
+    def __init__(self, reader_index=None):
         self.reader = None
+        self.reader_index = reader_index or int(os.getenv('READER_INDEX', 0))
+        self.reader_model = os.getenv('READER_MODEL', 'ACR122U')
         self.connection = None
         self.session_key = None
         self.use_single_des_mode = False
@@ -85,12 +88,26 @@ class RCDESFire:
     def get_readers(self):
         return readers()
 
+
+    def check_acr122u_connected(self):
+        r = self.get_readers()
+        print(f"Available readers: {', '.join([str(reader) for reader in r])}")
+        print(f"Checking for {self.reader_model} at index {self.reader_index}...")
+        if not r:
+            logger.error("No smart card readers found.")
+            raise Exception("No smart card readers found. Please connect a reader and try again.")
+    
+        if self.reader_model not in r[self.reader_index].name.split(" ")[1]:
+            logger.info(f"No {self.reader_model} Smart card reader found at index {self.reader_index}.")
+            raise Exception(f"{self.reader_model} reader not found. Please connect the reader and try again.")
+
+
     def connect_reader(self):
         r = self.get_readers()
         if not r:
             self.reader = None
             return False
-        self.reader = r[0]
+        self.reader = r[self.reader_index]
         return True
 
     def connect_card(self):
